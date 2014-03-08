@@ -1,0 +1,201 @@
+diff -rupN a/config.def.h b/config.def.h
+--- a/config.def.h	2013-11-21 00:54:26.000000000 -0800
++++ b/config.def.h	2014-02-06 16:13:12.802884399 -0800
+@@ -1,13 +1,14 @@
+ /* See LICENSE file for copyright and license details. */
++#include "fibonacci.c"
+ 
+ /* appearance */
+ static const char font[]            = "-*-terminus-medium-r-*-*-16-*-*-*-*-*-*-*";
+-static const char normbordercolor[] = "#444444";
+-static const char normbgcolor[]     = "#222222";
+-static const char normfgcolor[]     = "#bbbbbb";
+-static const char selbordercolor[]  = "#005577";
+-static const char selbgcolor[]      = "#005577";
+-static const char selfgcolor[]      = "#eeeeee";
++static const char normbordercolor[] = "#93a1a1";
++static const char normbgcolor[]     = "#002b36";
++static const char normfgcolor[]     = "#657b83";
++static const char selbordercolor[]  = "#586e75";
++static const char selbgcolor[]      = "#586e75";
++static const char selfgcolor[]      = "#002b36";
+ static const unsigned int borderpx  = 1;        /* border pixel of windows */
+ static const unsigned int snap      = 32;       /* snap pixel */
+ static const Bool showbar           = True;     /* False means no bar */
+@@ -17,25 +18,31 @@ static const Bool topbar            = Tr
+ static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+ 
+ static const Rule rules[] = {
+-	/* class      instance    title       tags mask     isfloating   monitor */
+-	{ "Gimp",     NULL,       NULL,       0,            True,        -1 },
+-	{ "Firefox",  NULL,       NULL,       1 << 8,       False,       -1 },
++	/* class         instance    title       tags mask     isfloating   monitor */
++	{ "Gimp",        NULL,       NULL,       0,            True,       -1 },
++	{ "Firefox",     NULL,       NULL,       0,            True,       -1 },
++	{ "Pidgin",      NULL,       NULL,       0,            True,       -1 },
++	{ "Chromium",    NULL,       NULL,       0,            True,       -1 },
++	{ "Eclipse",     NULL,       NULL,       0,            True,       -1 },
++	{ "Eboard",      NULL,       NULL,       0,            True,       -1 },
+ };
+ 
+ /* layout(s) */
+-static const float mfact      = 0.55; /* factor of master area size [0.05..0.95] */
+-static const int nmaster      = 1;    /* number of clients in master area */
+-static const Bool resizehints = True; /* True means respect size hints in tiled resizals */
++static const float mfact      = 0.50; /* factor of master area size [0.05..0.95] */
++static const int nmaster      = 2;    /* number of clients in master area */
++static const Bool resizehints = False; /* True means respect size hints in tiled resizals */
+ 
+ static const Layout layouts[] = {
+ 	/* symbol     arrange function */
+-	{ "[]=",      tile },    /* first entry is default */
++	{ "[@]",      spiral },
+ 	{ "><>",      NULL },    /* no layout function means floating behavior */
++	{ "[\\]",     dwindle },
++	{ "[]=",      tile },    /* first entry is default */
+ 	{ "[M]",      monocle },
+ };
+ 
+ /* key definitions */
+-#define MODKEY Mod1Mask
++#define MODKEY Mod4Mask
+ #define TAGKEYS(KEY,TAG) \
+ 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
+ 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
+@@ -46,13 +53,15 @@ static const Layout layouts[] = {
+ #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
+ 
+ /* commands */
+-static const char *dmenucmd[] = { "dmenu_run", "-fn", font, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
+-static const char *termcmd[]  = { "uxterm", NULL };
++static const char *dmenucmd[] = { "dmenu_run", "-fn", font, "-b", "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
++static const char *termcmd[]  = { "rxvt", NULL };
++static const char *editcmd[]  = { "emacsclient", "-c", NULL };
+ 
+ static Key keys[] = {
+ 	/* modifier                     key        function        argument */
+ 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
+ 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
++	{ MODKEY,                       XK_e,      spawn,          {.v = editcmd } },
+ 	{ MODKEY,                       XK_b,      togglebar,      {0} },
+ 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
+ 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
+@@ -63,9 +72,9 @@ static Key keys[] = {
+ 	{ MODKEY,                       XK_Return, zoom,           {0} },
+ 	{ MODKEY,                       XK_Tab,    view,           {0} },
+ 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
+-	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
++	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[2]} },
+ 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
+-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
++	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[4]} },
+ 	{ MODKEY,                       XK_space,  setlayout,      {0} },
+ 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
+ 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
+@@ -91,7 +100,7 @@ static Key keys[] = {
+ static Button buttons[] = {
+ 	/* click                event mask      button          function        argument */
+ 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
+-	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
++	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[1]} },
+ 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
+ 	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
+ 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
+@@ -102,4 +111,3 @@ static Button buttons[] = {
+ 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
+ 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
+ };
+-
+diff -rupN a/config.mk b/config.mk
+--- a/config.mk	2013-11-21 00:54:26.000000000 -0800
++++ b/config.mk	2013-11-21 00:54:26.000000000 -0800
+@@ -16,14 +16,14 @@ XINERAMAFLAGS = -DXINERAMA
+ 
+ # includes and libs
+ INCS = -I. -I/usr/include -I${X11INC}
+-LIBS = -L/usr/lib -lc -L${X11LIB} -lX11 ${XINERAMALIBS}
++LIBS = -lc -L${X11LIB} -lX11 ${XINERAMALIBS}
+ 
+ # flags
+ CPPFLAGS = -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
+-#CFLAGS = -g -std=c99 -pedantic -Wall -O0 ${INCS} ${CPPFLAGS}
+-CFLAGS = -std=c99 -pedantic -Wall -Os ${INCS} ${CPPFLAGS}
+-#LDFLAGS = -g ${LIBS}
+-LDFLAGS = -s ${LIBS}
++CFLAGS = -g -std=c99 -pedantic -Wall ${OPTS} ${INCS} ${CPPFLAGS}
++#CFLAGS = -std=c99 -pedantic -Wall -Os ${INCS} ${CPPFLAGS}
++LDFLAGS = -g ${LIBS}
++#LDFLAGS = -s ${LIBS}
+ 
+ # Solaris
+ #CFLAGS = -fast ${INCS} -DVERSION=\"${VERSION}\"
+diff -rupN a/fibonacci.c b/fibonacci.c
+--- a/fibonacci.c	1969-12-31 16:00:00.000000000 -0800
++++ b/fibonacci.c	2014-01-20 09:39:39.285272523 -0800
+@@ -0,0 +1,66 @@
++void
++fibonacci(Monitor *mon, int s) {
++	unsigned int i, n, nx, ny, nw, nh;
++	Client *c;
++
++	for(n = 0, c = nexttiled(mon->clients); c; c = nexttiled(c->next), n++);
++	if(n == 0)
++		return;
++	
++	nx = mon->wx;
++	ny = 0;
++	nw = mon->ww;
++	nh = mon->wh;
++	
++	for(i = 0, c = nexttiled(mon->clients); c; c = nexttiled(c->next)) {
++		if((i % 2 && nh / 2 > 2 * c->bw)
++		   || (!(i % 2) && nw / 2 > 2 * c->bw)) {
++			if(i < n - 1) {
++				if(i % 2)
++					nh /= 2;
++				else
++					nw /= 2;
++				if((i % 4) == 2 && !s)
++					nx += nw;
++				else if((i % 4) == 3 && !s)
++					ny += nh;
++			}
++			if((i % 4) == 0) {
++				if(s)
++					ny += nh;
++				else
++					ny -= nh;
++			}
++			else if((i % 4) == 1)
++				nx += nw;
++			else if((i % 4) == 2)
++				ny += nh;
++			else if((i % 4) == 3) {
++				if(s)
++					nx += nw;
++				else
++					nx -= nw;
++			}
++			if(i == 0)
++			{
++				if(n != 1)
++					nw = mon->ww * mon->mfact;
++				ny = mon->wy;
++			}
++			else if(i == 1)
++				nw = mon->ww - nw;
++			i++;
++		}
++		resize(c, nx, ny, nw - 2 * c->bw, nh - 2 * c->bw, False);
++	}
++}
++
++void
++dwindle(Monitor *mon) {
++	fibonacci(mon, 1);
++}
++
++void
++spiral(Monitor *mon) {
++	fibonacci(mon, 0);
++}
