@@ -1,6 +1,6 @@
 diff -rupN a/config.def.h b/config.def.h
 --- a/config.def.h	2017-03-17 12:37:33.899114784 -0700
-+++ b/config.def.h	2017-03-17 12:44:06.930104879 -0700
++++ b/config.def.h	2017-03-17 12:57:07.043085220 -0700
 @@ -1,16 +1,16 @@
  /* See LICENSE file for copyright and license details. */
 -
@@ -8,7 +8,7 @@ diff -rupN a/config.def.h b/config.def.h
  /* appearance */
  static const char *fonts[] = {
 -	"monospace:size=10"
-+    "monospace:size=10"
++    "terminus:size=10"
  };
 -static const char dmenufont[]       = "monospace:size=10";
 -static const char normbordercolor[] = "#444444";
@@ -17,7 +17,7 @@ diff -rupN a/config.def.h b/config.def.h
 -static const char selbordercolor[]  = "#005577";
 -static const char selbgcolor[]      = "#005577";
 -static const char selfgcolor[]      = "#eeeeee";
-+static const char dmenufont[]       = "terminus:size=16";
++static const char dmenufont[]       = "terminus:size=10";
 +static const char normbordercolor[] = "#93a1a1";
 +static const char normbgcolor[]     = "#002b36";
 +static const char normfgcolor[]     = "#657b83";
@@ -52,7 +52,7 @@ diff -rupN a/config.def.h b/config.def.h
  };
  
  /* layout(s) */
-@@ -35,19 +39,21 @@ static const int nmaster     = 1;    /*
+@@ -35,79 +39,82 @@ static const int nmaster     = 1;    /*
  static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
  
  static const Layout layouts[] = {
@@ -69,7 +69,8 @@ diff -rupN a/config.def.h b/config.def.h
  };
  
  /* key definitions */
- #define MODKEY Mod1Mask
+-#define MODKEY Mod1Mask
++#define MODKEY Mod4Mask
  #define TAGKEYS(KEY,TAG) \
 -	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 -	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -82,11 +83,12 @@ diff -rupN a/config.def.h b/config.def.h
  
  /* helper for spawning shell commands in the pre dwm-5.0 fashion */
  #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
-@@ -55,59 +61,60 @@ static const Layout layouts[] = {
+ 
  /* commands */
  static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
- static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
+-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
 -static const char *termcmd[]  = { "st", NULL };
++static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-b", "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
 +static const char *termcmd[]  = { "rxvt", NULL };
 +static const char *editcmd[]  = { "emacsclient", "-c", NULL };
  
